@@ -1,6 +1,7 @@
+import { Context } from "./context";
 import { Resolvers } from "./types/resolvers";
 
-const resolvers: Resolvers = {
+const resolvers: Resolvers<Context> = {
   Query: {
     hello: () => 'world',
   },
