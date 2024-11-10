@@ -1,5 +1,5 @@
 import { RESTDataSource } from '@apollo/datasource-rest'
-import { Item, ListType, Story } from '../types/resolvers';
+import { ListType, Story } from '../types/resolvers';
 
 export default class HackerNewsAPI extends RESTDataSource {
   override baseURL = 'https://hacker-news.firebaseio.com/';

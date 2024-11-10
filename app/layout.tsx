@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import ApolloContainer from "@/containers/ApolloContainer";
 import "./globals.css";
+import Link from "next/link";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,7 +30,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ApolloContainer>
+          <div className="container mx-auto">
+            <header className="bg-orange-600">
+              <nav className="space-x-2">
+                <Link href='/' className="font-semibold">Hacker News</Link>
+                <Link href='/new'>new</Link>
+                <Link href='/ask'>ask</Link>
+              </nav>
+            </header>
+            <main>
+              {children}
+            </main>
+          </div>
+        </ApolloContainer>
       </body>
     </html>
   );

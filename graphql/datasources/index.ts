@@ -1,4 +1,4 @@
-import HackerNewsAPI from "./hackernewsAPI";
+import HackerNewsAPI from "./hackerNewsAPI";
 
 const datasources = {
   hackerNewsAPI: new HackerNewsAPI()
