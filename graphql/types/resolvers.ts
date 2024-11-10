@@ -6,6 +6,8 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -15,9 +17,70 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Item = {
+  by: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  type: ItemType;
+};
+
+export type ItemConnection = {
+  __typename?: 'ItemConnection';
+  edges: Array<ItemEdge>;
+  pageInfo: PageInfo;
+};
+
+export type ItemEdge = {
+  __typename?: 'ItemEdge';
+  cursor: Scalars['Int']['output'];
+  node: Item;
+};
+
+export enum ItemType {
+  Comment = 'comment',
+  Job = 'job',
+  Poll = 'poll',
+  Pollopt = 'pollopt',
+  Story = 'story'
+}
+
+export enum ListType {
+  Askstories = 'askstories',
+  Jobstories = 'jobstories',
+  Newstories = 'newstories',
+  Showstories = 'showstories',
+  Topstories = 'topstories'
+}
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor: Scalars['Int']['output'];
+  hasNextPage: Scalars['Boolean']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  hello?: Maybe<Scalars['String']['output']>;
+  items: ItemConnection;
+};
+
+
+export type QueryItemsArgs = {
+  after?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+  type: ListType;
+};
+
+export type Story = Item & {
+  __typename?: 'Story';
+  by: Scalars['String']['output'];
+  descendants: Scalars['Int']['output'];
+  id: Scalars['Int']['output'];
+  kids: Array<Scalars['Int']['output']>;
+  score: Scalars['Int']['output'];
+  text?: Maybe<Scalars['String']['output']>;
+  time: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  type: ItemType;
+  url?: Maybe<Scalars['String']['output']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -89,26 +152,88 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 ) => TResult | Promise<TResult>;
 
 
+/** Mapping of interface types */
+export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
+  Item: ( Story );
+}>;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  Item: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Item']>;
+  ItemConnection: ResolverTypeWrapper<Omit<ItemConnection, 'edges'> & { edges: Array<ResolversTypes['ItemEdge']> }>;
+  ItemEdge: ResolverTypeWrapper<Omit<ItemEdge, 'node'> & { node: ResolversTypes['Item'] }>;
+  ItemType: ItemType;
+  ListType: ListType;
+  PageInfo: ResolverTypeWrapper<PageInfo>;
   Query: ResolverTypeWrapper<{}>;
+  Story: ResolverTypeWrapper<Story>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
 }>;
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  Int: Scalars['Int']['output'];
+  Item: ResolversInterfaceTypes<ResolversParentTypes>['Item'];
+  ItemConnection: Omit<ItemConnection, 'edges'> & { edges: Array<ResolversParentTypes['ItemEdge']> };
+  ItemEdge: Omit<ItemEdge, 'node'> & { node: ResolversParentTypes['Item'] };
+  PageInfo: PageInfo;
   Query: {};
+  Story: Story;
   String: Scalars['String']['output'];
 }>;
 
+export type ItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['Item'] = ResolversParentTypes['Item']> = ResolversObject<{
+  __resolveType: TypeResolveFn<'Story', ParentType, ContextType>;
+  by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ItemType'], ParentType, ContextType>;
+}>;
+
+export type ItemConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItemConnection'] = ResolversParentTypes['ItemConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['ItemEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ItemEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItemEdge'] = ResolversParentTypes['ItemEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Item'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type PageInfoResolvers<ContextType = any, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = ResolversObject<{
+  endCursor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  hasNextPage?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
-  hello?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  items?: Resolver<ResolversTypes['ItemConnection'], ParentType, ContextType, RequireFields<QueryItemsArgs, 'type'>>;
+}>;
+
+export type StoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Story'] = ResolversParentTypes['Story']> = ResolversObject<{
+  by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  descendants?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  kids?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
+  score?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  time?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ItemType'], ParentType, ContextType>;
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Item?: ItemResolvers<ContextType>;
+  ItemConnection?: ItemConnectionResolvers<ContextType>;
+  ItemEdge?: ItemEdgeResolvers<ContextType>;
+  PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
+  Story?: StoryResolvers<ContextType>;
 }>;
 
