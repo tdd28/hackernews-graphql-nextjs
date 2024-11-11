@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 export default gql`
   type Query {
     items(type: ListType! first: Int after: Int): ItemConnection!
+    item(id: Int!): Item!
   }
 
   type ItemConnection {

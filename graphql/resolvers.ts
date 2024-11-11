@@ -3,7 +3,7 @@ import { ItemType, Resolvers } from "./types/resolvers";
 
 const resolvers: Resolvers<Context> = {
   Query: {
-    items: async (_, { type, first, after }, { datasources }) => {
+    async items(_, { type, first, after }, { datasources }) {
       const allIds = await datasources.hackerNewsAPI.getItems(type)
 
       const start = after ? allIds.indexOf(after) + 1 : 0
@@ -24,6 +24,9 @@ const resolvers: Resolvers<Context> = {
           endCursor: allIds[actualEndIndex]
         }
       }
+    },
+    item(_, { id }, { datasources }) {
+      return datasources.hackerNewsAPI.getItem(id)
     }
   },
   Item: {

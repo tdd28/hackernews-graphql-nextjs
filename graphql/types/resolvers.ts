@@ -72,7 +72,13 @@ export type PageInfo = {
 
 export type Query = {
   __typename?: 'Query';
+  item: Item;
   items: ItemConnection;
+};
+
+
+export type QueryItemArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
@@ -239,6 +245,7 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  item?: Resolver<ResolversTypes['Item'], ParentType, ContextType, RequireFields<QueryItemArgs, 'id'>>;
   items?: Resolver<ResolversTypes['ItemConnection'], ParentType, ContextType, RequireFields<QueryItemsArgs, 'type'>>;
 }>;
 
