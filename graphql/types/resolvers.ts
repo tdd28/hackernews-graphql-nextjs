@@ -20,6 +20,7 @@ export type Scalars = {
 export type Item = {
   by: Scalars['String']['output'];
   id: Scalars['Int']['output'];
+  time: Scalars['Int']['output'];
   type: ItemType;
 };
 
@@ -42,6 +43,18 @@ export enum ItemType {
   Pollopt = 'pollopt',
   Story = 'story'
 }
+
+export type Job = Item & {
+  __typename?: 'Job';
+  by: Scalars['String']['output'];
+  id: Scalars['Int']['output'];
+  score: Scalars['Int']['output'];
+  text: Scalars['String']['output'];
+  time: Scalars['Int']['output'];
+  title: Scalars['String']['output'];
+  type: ItemType;
+  url: Scalars['String']['output'];
+};
 
 export enum ListType {
   Askstories = 'askstories',
@@ -154,7 +167,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  Item: ( Story );
+  Item: ( Job ) | ( Story );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -165,6 +178,7 @@ export type ResolversTypes = ResolversObject<{
   ItemConnection: ResolverTypeWrapper<Omit<ItemConnection, 'edges'> & { edges: Array<ResolversTypes['ItemEdge']> }>;
   ItemEdge: ResolverTypeWrapper<Omit<ItemEdge, 'node'> & { node: ResolversTypes['Item'] }>;
   ItemType: ItemType;
+  Job: ResolverTypeWrapper<Job>;
   ListType: ListType;
   PageInfo: ResolverTypeWrapper<PageInfo>;
   Query: ResolverTypeWrapper<{}>;
@@ -179,6 +193,7 @@ export type ResolversParentTypes = ResolversObject<{
   Item: ResolversInterfaceTypes<ResolversParentTypes>['Item'];
   ItemConnection: Omit<ItemConnection, 'edges'> & { edges: Array<ResolversParentTypes['ItemEdge']> };
   ItemEdge: Omit<ItemEdge, 'node'> & { node: ResolversParentTypes['Item'] };
+  Job: Job;
   PageInfo: PageInfo;
   Query: {};
   Story: Story;
@@ -186,9 +201,10 @@ export type ResolversParentTypes = ResolversObject<{
 }>;
 
 export type ItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['Item'] = ResolversParentTypes['Item']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'Story', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Job' | 'Story', ParentType, ContextType>;
   by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  time?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   type?: Resolver<ResolversTypes['ItemType'], ParentType, ContextType>;
 }>;
 
@@ -201,6 +217,18 @@ export type ItemConnectionResolvers<ContextType = any, ParentType extends Resolv
 export type ItemEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ItemEdge'] = ResolversParentTypes['ItemEdge']> = ResolversObject<{
   cursor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   node?: Resolver<ResolversTypes['Item'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type JobResolvers<ContextType = any, ParentType extends ResolversParentTypes['Job'] = ResolversParentTypes['Job']> = ResolversObject<{
+  by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  score?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  time?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ItemType'], ParentType, ContextType>;
+  url?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -232,6 +260,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Item?: ItemResolvers<ContextType>;
   ItemConnection?: ItemConnectionResolvers<ContextType>;
   ItemEdge?: ItemEdgeResolvers<ContextType>;
+  Job?: JobResolvers<ContextType>;
   PageInfo?: PageInfoResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Story?: StoryResolvers<ContextType>;

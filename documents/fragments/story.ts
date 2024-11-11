@@ -1,6 +1,6 @@
 import { graphql } from "@/gql";
 
-export const CORE_SROTY_FIELDS = graphql(/* GraphQL */ `
+export const CORE_STORY_FIELDS = graphql(/* GraphQL */ `
   fragment CoreStoryFields on Story {
     title
   }  

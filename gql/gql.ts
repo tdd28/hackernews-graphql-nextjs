@@ -14,8 +14,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
+    "\n  fragment CoreJobFields on Job {\n    title\n  }  \n": types.CoreJobFieldsFragmentDoc,
     "\n  fragment CoreStoryFields on Story {\n    title\n  }  \n": types.CoreStoryFieldsFragmentDoc,
-    "\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": types.GetItemsDocument,
+    "\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n          ... on Job {\n            ...CoreJobFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n": types.GetItemsDocument,
 };
 
 /**
@@ -35,11 +36,15 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function graphql(source: "\n  fragment CoreJobFields on Job {\n    title\n  }  \n"): (typeof documents)["\n  fragment CoreJobFields on Job {\n    title\n  }  \n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function graphql(source: "\n  fragment CoreStoryFields on Story {\n    title\n  }  \n"): (typeof documents)["\n  fragment CoreStoryFields on Story {\n    title\n  }  \n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"];
+export function graphql(source: "\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n          ... on Job {\n            ...CoreJobFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetItems($type: ListType!, $first: Int, $after: Int) {\n    items(type: $type, first: $first, after: $after) {\n      edges {\n        node {\n          id\n          type\n          by\n          ... on Story {\n            ...CoreStoryFields\n          }\n          ... on Job {\n            ...CoreJobFields\n          }\n        }\n      }\n      pageInfo {\n        hasNextPage\n        endCursor\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

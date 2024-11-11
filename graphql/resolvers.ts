@@ -5,13 +5,13 @@ const resolvers: Resolvers<Context> = {
   Query: {
     items: async (_, { type, first, after }, { datasources }) => {
       const allIds = await datasources.hackerNewsAPI.getItems(type)
-      
+
       const start = after ? allIds.indexOf(after) + 1 : 0
       const end = start + (first || 10)
-        
+
       const chunkIds = allIds.slice(start, end)
       const items = await Promise.all(chunkIds.map(datasources.hackerNewsAPI.getItem))
-      
+
       const actualEndIndex = start + items.length - 1
 
       return {
@@ -31,6 +31,8 @@ const resolvers: Resolvers<Context> = {
       switch (item.type) {
         case ItemType.Story:
           return 'Story'
+        case ItemType.Job:
+          return 'Job'
         default:
           throw `unknown item type: ${item.type}`
       }

@@ -11,6 +11,9 @@ export const GET_ITEMS = graphql(/* GraphQL */ `
           ... on Story {
             ...CoreStoryFields
           }
+          ... on Job {
+            ...CoreJobFields
+          }
         }
       }
       pageInfo {

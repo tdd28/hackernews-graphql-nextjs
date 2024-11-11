@@ -19,13 +19,24 @@ export default gql`
     id: Int!
     type: ItemType!
     by: String!
+    time: Int!
     descendants: Int!
     kids: [Int!]!
     score: Int!
     text: String
-    time: Int!
     title: String!
     url: String
+  }
+  
+  type Job implements Item {
+    id: Int!
+    type: ItemType!
+    by: String!
+    time: Int!
+    score: Int!
+    text: String!
+    title: String!
+    url: String!
   }
 
   type PageInfo {
@@ -37,6 +48,7 @@ export default gql`
     id: Int!
     type: ItemType!
     by: String!
+    time: Int!
   }
 
   enum ListType {

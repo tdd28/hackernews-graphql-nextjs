@@ -1,12 +1,27 @@
-import { CORE_SROTY_FIELDS } from "@/documents/fragments/story"
+import { CORE_JOB_FIELDS } from "@/documents/fragments/job"
+import { CORE_STORY_FIELDS } from "@/documents/fragments/story"
 import { FragmentType, useFragment } from "@/gql"
 
 interface StoryProps {
-  item: FragmentType<typeof CORE_SROTY_FIELDS>
+  item: FragmentType<typeof CORE_STORY_FIELDS>
 }
 
 export function Story({ item }: StoryProps) {
-  const frag = useFragment(CORE_SROTY_FIELDS, item)
+  const frag = useFragment(CORE_STORY_FIELDS, item)
+
+  return (
+    <li>
+      {frag.title}
+    </li>
+  )
+}
+
+interface JobProps {
+  item: FragmentType<typeof CORE_JOB_FIELDS>
+}
+
+export function Job({ item }: JobProps) {
+  const frag = useFragment(CORE_JOB_FIELDS, item)
 
   return (
     <li>
@@ -16,7 +31,8 @@ export function Story({ item }: StoryProps) {
 }
 
 const Item = {
-  Story
+  Story,
+  Job
 }
 
 export default Item

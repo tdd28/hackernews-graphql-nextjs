@@ -2,8 +2,10 @@ import Items from "@/components/Items"
 import { ListType } from "@/gql/graphql"
 
 const listTypeParams = {
-  new: ListType.Newstories,
-  ask: ListType.Askstories
+  newest: ListType.Newstories,
+  ask: ListType.Askstories,
+  show: ListType.Showstories,
+  jobs: ListType.Jobstories,
 }
 
 export const dynamic = 'force-dynamic'
@@ -18,7 +20,7 @@ interface ListProps {
 }
 
 export default async function List({ params }: ListProps) {
-  const { type } = await params 
-  
+  const { type } = await params
+
   return <Items type={listTypeParams[type]} />
 }
