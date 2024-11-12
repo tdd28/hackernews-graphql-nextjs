@@ -1,32 +1,21 @@
-import { Context } from "./context";
-import { ItemType, Resolvers } from "./types/resolvers";
+import { ItemType } from "./types/resolvers";
+import { connection } from "./utils";
+import type { Context } from "./context";
+import type { Comment, Resolvers } from "./types/resolvers";
 
 const resolvers: Resolvers<Context> = {
   Query: {
     async items(_, { type, first, after }, { datasources }) {
-      const allIds = await datasources.hackerNewsAPI.getItems(type)
-
-      const start = after ? allIds.indexOf(after) + 1 : 0
-      const end = start + (first || 10)
-
-      const chunkIds = allIds.slice(start, end)
-      const items = await Promise.all(chunkIds.map(datasources.hackerNewsAPI.getItem))
-
-      const actualEndIndex = start + items.length - 1
-
-      return {
-        edges: items.map(item => ({
-          node: item,
-          cursor: item.id
-        })),
-        pageInfo: {
-          hasNextPage: !!allIds[actualEndIndex + 1],
-          endCursor: allIds[actualEndIndex]
-        }
-      }
+      const ids = await datasources.hackerNewsAPI.getItems(type)
+      return connection(ids, datasources.hackerNewsAPI.getItem, { first, after })
     },
     item(_, { id }, { datasources }) {
       return datasources.hackerNewsAPI.getItem(id)
+    }
+  },
+  Story: {
+    comments(parent, { first, after }, { datasources }) {
+      return connection(parent.kids, datasources.hackerNewsAPI.getItem<Comment>, { first, after })
     }
   },
   Item: {
@@ -36,6 +25,8 @@ const resolvers: Resolvers<Context> = {
           return 'Story'
         case ItemType.Job:
           return 'Job'
+        case ItemType.Comment:
+          return 'Comment'
         default:
           throw `unknown item type: ${item.type}`
       }

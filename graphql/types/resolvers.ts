@@ -17,6 +17,30 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Comment = Item & {
+  __typename?: 'Comment';
+  by: Scalars['String']['output'];
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['Int']['output'];
+  kids?: Maybe<Array<Scalars['Int']['output']>>;
+  parent: Scalars['Int']['output'];
+  text?: Maybe<Scalars['String']['output']>;
+  time: Scalars['Int']['output'];
+  type: ItemType;
+};
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  edges: Array<CommentEdge>;
+  pageInfo: PageInfo;
+};
+
+export type CommentEdge = {
+  __typename?: 'CommentEdge';
+  cursor: Scalars['Int']['output'];
+  node: Comment;
+};
+
 export type Item = {
   by: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -91,6 +115,7 @@ export type QueryItemsArgs = {
 export type Story = Item & {
   __typename?: 'Story';
   by: Scalars['String']['output'];
+  comments: CommentConnection;
   descendants: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   kids: Array<Scalars['Int']['output']>;
@@ -100,6 +125,12 @@ export type Story = Item & {
   title: Scalars['String']['output'];
   type: ItemType;
   url?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type StoryCommentsArgs = {
+  after?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type WithIndex<TObject> = TObject & Record<string, any>;
@@ -173,12 +204,15 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping of interface types */
 export type ResolversInterfaceTypes<_RefType extends Record<string, unknown>> = ResolversObject<{
-  Item: ( Job ) | ( Story );
+  Item: ( Comment ) | ( Job ) | ( Story );
 }>;
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = ResolversObject<{
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Comment: ResolverTypeWrapper<Comment>;
+  CommentConnection: ResolverTypeWrapper<CommentConnection>;
+  CommentEdge: ResolverTypeWrapper<CommentEdge>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Item: ResolverTypeWrapper<ResolversInterfaceTypes<ResolversTypes>['Item']>;
   ItemConnection: ResolverTypeWrapper<Omit<ItemConnection, 'edges'> & { edges: Array<ResolversTypes['ItemEdge']> }>;
@@ -195,6 +229,9 @@ export type ResolversTypes = ResolversObject<{
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = ResolversObject<{
   Boolean: Scalars['Boolean']['output'];
+  Comment: Comment;
+  CommentConnection: CommentConnection;
+  CommentEdge: CommentEdge;
   Int: Scalars['Int']['output'];
   Item: ResolversInterfaceTypes<ResolversParentTypes>['Item'];
   ItemConnection: Omit<ItemConnection, 'edges'> & { edges: Array<ResolversParentTypes['ItemEdge']> };
@@ -206,8 +243,32 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String']['output'];
 }>;
 
+export type CommentResolvers<ContextType = any, ParentType extends ResolversParentTypes['Comment'] = ResolversParentTypes['Comment']> = ResolversObject<{
+  by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  deleted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  kids?: Resolver<Maybe<Array<ResolversTypes['Int']>>, ParentType, ContextType>;
+  parent?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  time?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['ItemType'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CommentConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentConnection'] = ResolversParentTypes['CommentConnection']> = ResolversObject<{
+  edges?: Resolver<Array<ResolversTypes['CommentEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type CommentEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['CommentEdge'] = ResolversParentTypes['CommentEdge']> = ResolversObject<{
+  cursor?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  node?: Resolver<ResolversTypes['Comment'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type ItemResolvers<ContextType = any, ParentType extends ResolversParentTypes['Item'] = ResolversParentTypes['Item']> = ResolversObject<{
-  __resolveType: TypeResolveFn<'Job' | 'Story', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Comment' | 'Job' | 'Story', ParentType, ContextType>;
   by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   time?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -251,6 +312,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 
 export type StoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Story'] = ResolversParentTypes['Story']> = ResolversObject<{
   by?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  comments?: Resolver<ResolversTypes['CommentConnection'], ParentType, ContextType, Partial<StoryCommentsArgs>>;
   descendants?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   kids?: Resolver<Array<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -264,6 +326,9 @@ export type StoryResolvers<ContextType = any, ParentType extends ResolversParent
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  Comment?: CommentResolvers<ContextType>;
+  CommentConnection?: CommentConnectionResolvers<ContextType>;
+  CommentEdge?: CommentEdgeResolvers<ContextType>;
   Item?: ItemResolvers<ContextType>;
   ItemConnection?: ItemConnectionResolvers<ContextType>;
   ItemEdge?: ItemEdgeResolvers<ContextType>;

@@ -1,6 +1,7 @@
 {
   "possibleTypes": {
     "Item": [
+      "Comment",
       "Job",
       "Story"
     ]

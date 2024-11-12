@@ -16,6 +16,30 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
+export type Comment = Item & {
+  __typename?: 'Comment';
+  by: Scalars['String']['output'];
+  deleted?: Maybe<Scalars['Boolean']['output']>;
+  id: Scalars['Int']['output'];
+  kids?: Maybe<Array<Scalars['Int']['output']>>;
+  parent: Scalars['Int']['output'];
+  text?: Maybe<Scalars['String']['output']>;
+  time: Scalars['Int']['output'];
+  type: ItemType;
+};
+
+export type CommentConnection = {
+  __typename?: 'CommentConnection';
+  edges: Array<CommentEdge>;
+  pageInfo: PageInfo;
+};
+
+export type CommentEdge = {
+  __typename?: 'CommentEdge';
+  cursor: Scalars['Int']['output'];
+  node: Comment;
+};
+
 export type Item = {
   by: Scalars['String']['output'];
   id: Scalars['Int']['output'];
@@ -90,6 +114,7 @@ export type QueryItemsArgs = {
 export type Story = Item & {
   __typename?: 'Story';
   by: Scalars['String']['output'];
+  comments: CommentConnection;
   descendants: Scalars['Int']['output'];
   id: Scalars['Int']['output'];
   kids: Array<Scalars['Int']['output']>;
@@ -101,6 +126,12 @@ export type Story = Item & {
   url?: Maybe<Scalars['String']['output']>;
 };
 
+
+export type StoryCommentsArgs = {
+  after?: InputMaybe<Scalars['Int']['input']>;
+  first?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type CoreJobFieldsFragment = { __typename?: 'Job', title: string } & { ' $fragmentName'?: 'CoreJobFieldsFragment' };
 
 export type CoreStoryFieldsFragment = { __typename?: 'Story', title: string } & { ' $fragmentName'?: 'CoreStoryFieldsFragment' };
@@ -110,7 +141,7 @@ export type GetItemQueryVariables = Exact<{
 }>;
 
 
-export type GetItemQuery = { __typename?: 'Query', item: (
+export type GetItemQuery = { __typename?: 'Query', item: { __typename?: 'Comment', id: number, type: ItemType, by: string } | (
     { __typename?: 'Job', id: number, type: ItemType, by: string }
     & { ' $fragmentRefs'?: { 'CoreJobFieldsFragment': CoreJobFieldsFragment } }
   ) | (
@@ -125,7 +156,7 @@ export type GetItemsQueryVariables = Exact<{
 }>;
 
 
-export type GetItemsQuery = { __typename?: 'Query', items: { __typename?: 'ItemConnection', edges: Array<{ __typename?: 'ItemEdge', node: (
+export type GetItemsQuery = { __typename?: 'Query', items: { __typename?: 'ItemConnection', edges: Array<{ __typename?: 'ItemEdge', node: { __typename?: 'Comment', id: number, type: ItemType, by: string } | (
         { __typename?: 'Job', id: number, type: ItemType, by: string }
         & { ' $fragmentRefs'?: { 'CoreJobFieldsFragment': CoreJobFieldsFragment } }
       ) | (
