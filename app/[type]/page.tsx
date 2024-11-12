@@ -1,4 +1,4 @@
-import Items from "@/components/Items"
+import List from "@/components/List"
 import { ListType } from "@/gql/graphql"
 
 const listTypeParams = {
@@ -15,12 +15,12 @@ export async function generateStaticParams() {
   return Object.keys(listTypeParams).map(type => ({ type }))
 }
 
-interface ListProps {
+interface Props {
   params: Promise<{ type: keyof typeof listTypeParams }>
 }
 
-export default async function List({ params }: ListProps) {
+export default async function ListPage({ params }: Props) {
   const { type } = await params
 
-  return <Items type={listTypeParams[type]} />
+  return <List type={listTypeParams[type]} />
 }

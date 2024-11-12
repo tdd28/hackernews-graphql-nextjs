@@ -22,12 +22,12 @@ export default gql`
     by: String!
     time: Int!
     descendants: Int!
-    kids: [Int!]!
+    kids: [Int!]
     score: Int!
     text: String
     title: String!
     url: String
-    comments(first: Int, after: Int): CommentConnection!
+    comments(first: Int, after: Int): CommentConnection
   }
   
   type Job implements Item {

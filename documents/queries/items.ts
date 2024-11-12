@@ -8,6 +8,7 @@ export const GET_ITEMS = graphql(/* GraphQL */ `
           id
           type
           by
+          time
           ... on Story {
             ...CoreStoryFields
           }
@@ -17,8 +18,7 @@ export const GET_ITEMS = graphql(/* GraphQL */ `
         }
       }
       pageInfo {
-        hasNextPage
-        endCursor
+        ...PageInfoFields
       }
     }
   }

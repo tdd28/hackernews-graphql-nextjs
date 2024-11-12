@@ -15,6 +15,7 @@ const resolvers: Resolvers<Context> = {
   },
   Story: {
     comments(parent, { first, after }, { datasources }) {
+      if (!parent.kids) return null
       return connection(parent.kids, datasources.hackerNewsAPI.getItem<Comment>, { first, after })
     }
   },

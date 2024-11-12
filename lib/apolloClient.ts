@@ -16,7 +16,23 @@ export function makeClient() {
       typePolicies: {
         Query: {
           fields: {
-            items: relayStylePagination(["type"])
+            items: relayStylePagination(["type"]),
+            item: {
+              read(_, { args, toReference, canRead }) {
+                for (const itemType of introspection.possibleTypes.Item) {
+                  const ref = toReference({
+                    __typename: itemType,
+                    id: args?.id
+                  })
+                  if (canRead(ref)) return ref
+                }
+              }
+            }
+          }
+        },
+        Story: {
+          fields: {
+            comments: relayStylePagination(["id"])
           }
         }
       }
